@@ -1,4 +1,4 @@
-package com.surendiran;
+package com.surendiran.OneToOne;
 
 import com.surendiran.entity.Instructor;
 import com.surendiran.entity.InstructorDetail;

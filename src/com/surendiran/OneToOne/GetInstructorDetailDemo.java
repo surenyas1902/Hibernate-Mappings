@@ -1,4 +1,4 @@
-package com.surendiran;
+package com.surendiran.OneToOne;
 
 import com.surendiran.entity.Instructor;
 import com.surendiran.entity.InstructorDetail;
@@ -6,7 +6,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-public class DeleteDemo {
+public class GetInstructorDetailDemo {
 
     public static void main(String[] args) {
         SessionFactory factory = new Configuration()
@@ -22,20 +22,23 @@ public class DeleteDemo {
             // start a transaction
             session.beginTransaction();
 
-            // get Instrtuctor by Primary Key
+            // get the instructor detail object
+            InstructorDetail tmpInstructorDetail = session.get(InstructorDetail.class, 2999);
 
-            Instructor tmpInstructor = session.get(Instructor.class, 1);
+            // print the instructor detail
+            System.out.println(tmpInstructorDetail);
 
-            if(tmpInstructor != null) {
-                System.out.println("Deleting " + tmpInstructor);
+            // print the associated instructor
+            System.out.println("Associated Instructor: " + tmpInstructorDetail.getInstructor());
 
-                // Will also delete details object because of CascadeType.ALL
-                session.delete(tmpInstructor);
-            }
-
+            // commit the transaction
             session.getTransaction().commit();
         }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
         finally {
+            session.close();
             factory.close();
         }
     }
