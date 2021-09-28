@@ -6,8 +6,9 @@ import com.surendiran.entity.InstructorDetail;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 
-public class EagerLazyLoadingDemo {
+public class FetchJoinDemo {
 
     public static void main(String[] args) {
         SessionFactory factory = new Configuration()
@@ -26,11 +27,15 @@ public class EagerLazyLoadingDemo {
 
             //get the instructor from db
             int theId = 1;
-            Instructor tempInstructor = session.get(Instructor.class, theId);
+            Query<Instructor> query = session.createQuery("select i from Instructor i "
+                    +"JOIN FETCH i.courses "
+                    +"where i.id=:theInstructorId",
+                    Instructor.class);
+            query.setParameter("theInstructorId", theId);
+
+            Instructor tempInstructor = query.getSingleResult();
 
             System.out.println("Instructor: " + tempInstructor);
-
-            System.out.println("Courses: " + tempInstructor.getCourses());
 
             session.getTransaction().commit();
 

@@ -1,13 +1,14 @@
-package com.surendiran.EagerLazyDemo;
+package com.surendiran.OneToManyUni;
 
 import com.surendiran.entity.Course;
 import com.surendiran.entity.Instructor;
 import com.surendiran.entity.InstructorDetail;
+import com.surendiran.entity.Review;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-public class EagerLazyLoadingDemo {
+public class DeleteCoursesAndReviewsDemo {
 
     public static void main(String[] args) {
         SessionFactory factory = new Configuration()
@@ -15,6 +16,7 @@ public class EagerLazyLoadingDemo {
                 .addAnnotatedClass(Instructor.class)
                 .addAnnotatedClass(InstructorDetail.class)
                 .addAnnotatedClass(Course.class)
+                .addAnnotatedClass(Review.class)
                 .buildSessionFactory();
 
         // Create a session
@@ -24,22 +26,19 @@ public class EagerLazyLoadingDemo {
             // start a transaction
             session.beginTransaction();
 
-            //get the instructor from db
-            int theId = 1;
-            Instructor tempInstructor = session.get(Instructor.class, theId);
+            // get the course
+            int theId = 10;
+            Course tempCourse = session.get(Course.class, theId);
 
-            System.out.println("Instructor: " + tempInstructor);
+            // print the course
 
-            System.out.println("Courses: " + tempInstructor.getCourses());
+            System.out.println(tempCourse);
+            // print the course reviews
+            System.out.println(tempCourse.getReviews());
 
+            session.delete(tempCourse);
+            // commit the transaction
             session.getTransaction().commit();
-
-            session.close();
-
-            System.out.println("Session closed now");
-
-            // get the course for the instructor
-            System.out.println("Courses: " + tempInstructor.getCourses());
         }
         finally {
             session.close();
